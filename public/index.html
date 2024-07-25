@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQLite Web App</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    table, th, td { border: 1px solid black; }
+    th, td { padding: 8px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>SQLite Web App</h1>
+  <form id="userForm">
+    <input type="text" id="name" placeholder="Enter name" required>
+    <button type="submit">Add User</button>
+  </form>
+  <h2>Users</h2>
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('userForm');
+    const userTableBody = document.getElementById('userTable').getElementsByTagName('tbody')[0];
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const name = document.getElementById('name').value;
+
+      const response = await fetch('/add-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+
+      const user = await response.json();
+      addUserToTable(user);
+      form.reset();
+    });
+
+    async function loadUsers() {
+      const response = await fetch('/users');
+      const users = await response.json();
+      users.forEach(addUserToTable);
+    }
+
+    function addUserToTable(user) {
+      const row = userTableBody.insertRow();
+      row.insertCell(0).textContent = user.id;
+      row.insertCell(1).textContent = user.name;
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>
