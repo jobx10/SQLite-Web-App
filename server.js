@@ -9,7 +9,7 @@ const db = new sqlite3.Database('./db.db'); // Use ':memory:' for an in-memory d
 
 // Create a table
 db.serialize(() => {
-  db.run('CREATE TABLE user (id INTEGER PRIMARY KEY, name TEXT)');
+  db.run('CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, name TEXT)');
 });
 
 // Middleware to serve static files
