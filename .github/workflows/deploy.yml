@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Build the project
-        run: node server.js
+        run: npm run deploy
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v1
